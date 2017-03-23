@@ -108,22 +108,5 @@ Install
 
 Get the script:
 
- * Download the `pidcat.py` and place it on your PATH.
-
-
-Make sure that `adb` from the [Android SDK][3] is on your PATH. This script will
-not work unless this is that case. That means, when you type `adb` and press
-enter into your terminal something actually happens.
-
-To include `adb` and other android tools on your path:
-
-    export PATH=$PATH:<path to Android SDK>/platform-tools
-    export PATH=$PATH:<path to Android SDK>/tools
-
-Include these lines in your `.bashrc`, `.zshrc` or `.bash_profile`.
-
-*Note:* `<path to Android SDK>` should be absolute and not relative.
-
- [1]: https://github.com/JakeWharton/pidcat
- [2]: https://github.com/paoloantinori/hhighlighter
- [3]: http://developer.android.com/sdk/
+ * Download the `hl.py`
+ * Place it on your PATH
