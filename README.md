@@ -9,8 +9,8 @@ You can grep or/and highlight(only) with keywords for a file or a bash pipe
 
 All the key words to grep or highlight should be delimited
 with `\|` and you can specify its color by following each key word
-with `\\color_name`. The supported color names are BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE,
-BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE.
+with `\\color_name`. The supported color names are `BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE,
+BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE`.
 Color names are case ignored. Color with prefix "BG_" means background color.
 
 Regular expressions are not supported for now.
