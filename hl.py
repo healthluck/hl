@@ -9,7 +9,7 @@ __version__ = '1.0.0'
 
 parser = argparse.ArgumentParser(description='Highlight keywords in a file or stdin with different specified colors')
 parser.add_argument('files', nargs='*', help='File path', default=None)
-parser.add_argument('--grep', dest='grep_words', action='append', help='Filter lines with words in log messages. The words are delimited with \'\\|\', where each word can be tailed with a color initialed with \'\\\\\'. If no color is specified, \'RED\' will be the default color. For example, option --grep=\"word1\\|word2\\\\CYAN\" means to filter out all lines containing either word1 or word2, and word1 will appear in default color RED while word2 will be in CYAN. Supported colors (case ignored): {BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE}. The color with prefix \'BG_\' is background color. You can have multiple \'--grep\' options in the command line, and if so, the command will grep all of the key words in all \'--grep\' options')
+parser.add_argument('--grep', dest='grep_words', action='append', help='Filter lines with words in log messages. The words are delimited with \'|\', where each word can be tailed with a color initialed with \'\\\'. If no color is specified, \'RED\' will be the default color. For example, option --grep=\"word1|word2\\CYAN\" means to filter out all lines containing either word1 or word2, and word1 will appear in default color \'RED\' while word2 will be in the specified color \'CYAN\'. Supported colors (case ignored): {BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE}. The color with prefix \'BG_\' is background color. You can have multiple \'--grep\' options in the command line, and if so, the command will grep all of the key words in all \'--grep\' options. Escape \'|\' with \'\\|\', and \'\\\' with \'\\\\\'.')
 parser.add_argument('--hl', dest='highlight_words', action='append', help='Words to highlight in log messages. Unlike --grep option, this option will only highlight the specified words with specified color but does not filter any lines. Except this, the format and supported colors are the same as \'--grep\'. You can have multiple \'--hl\' options in the command line, and if so, the command will highlight all of the key words in all \'--hl\' options')
 parser.add_argument('--grepv', dest='grepv_words', action='append', help='Exclude lines with words from log messages. The format and supported colors are the same as \'--grep\'. Note that if both \'--grepv\' and \'--grep\' are provided and they contain the same word, the line will always show, which means \'--grep\' overwrites \'--grepv\' for the same word they both contain. You can have multiple \'--grepv\' options in the command line, and if so, the command will exclude the lines containing any keywords in all \'--grepv\' options')
 parser.add_argument('--igrep', dest='igrep_words', action='append', help='The same as \'--grep\', just ignore case')
@@ -35,69 +35,6 @@ color_dict = {'BLACK': BLACK, 'RED': RED, 'GREEN': GREEN, 'YELLOW': YELLOW, 'BLU
 contrast_color_dict = {BLACK: WHITE, RED: WHITE, GREEN: BLACK, YELLOW: BLACK, BLUE: WHITE, MAGENTA: WHITE, CYAN: BLACK, WHITE: BLACK}
 
 
-def extract_color_from_word(word):
-    w = word
-    c = RED
-    bg = False
-    delimiter = '\\'
-    index = word.rfind(delimiter)
-    if index is not -1:
-        w = word[0:index]
-        try:
-            color_word = word[index + len(delimiter):].upper()
-            if color_word[:3] == 'BG_':
-                bg = True
-                color_word = color_word[3:]
-            c = color_dict[color_word]
-        except KeyError:
-            c = RED
-    return w, c, bg
-
-
-def parse_words_with_color(words):
-    words_with_color = []
-    for word in words:
-        words_with_color.append(extract_color_from_word(word))
-    return words_with_color
-
-
-def empty(vector):
-    return vector is None or len(vector) <= 0
-
-
-grep_words_with_color = None
-highlight_words_with_color = None
-excluded_words = None
-igrep_words_with_color = None
-ihighlight_words_with_color = None
-iexcluded_words = None
-
-if not empty(args.grep_words):
-    grep_words_with_color = []
-    for words in args.grep_words:
-        grep_words_with_color += parse_words_with_color(words.split('\|'))
-if not empty(args.highlight_words):
-    highlight_words_with_color = []
-    for words in args.highlight_words:
-        highlight_words_with_color += parse_words_with_color(words.split('\|'))
-if not empty(args.grepv_words):
-    excluded_words = []
-    for words in args.grepv_words:
-        excluded_words += words.split('\|')
-
-if not empty(args.igrep_words):
-    igrep_words_with_color = []
-    for words in args.igrep_words:
-        igrep_words_with_color += parse_words_with_color(words.split('\|'))
-if not empty(args.ihighlight_words):
-    ihighlight_words_with_color = []
-    for words in args.ihighlight_words:
-        ihighlight_words_with_color += parse_words_with_color(words.split('\|'))
-if not empty(args.igrepv_words):
-    iexcluded_words = []
-    for words in args.igrepv_words:
-        iexcluded_words += words.split('\|')
-
 RESET = '\033[0m'
 EOL = '\033[K'
 
@@ -113,6 +50,63 @@ def termcolor(fg=None, bg=None, ul=False):
 
 def colorize(message, fg=None, bg=None, ul=False):
     return termcolor(fg, bg, ul) + message + RESET
+
+
+def print_error(error_msg):
+    print('\n' + colorize(error_msg, fg=WHITE, bg=RED, ul=True) + '\n')
+
+
+def extract_color_from_word(word):
+    w = word
+    c = RED
+    bg = False
+    delimiter = '\\'
+    index = word.rfind(delimiter)
+    if index is not -1:
+        w = word[0:index]
+        w.replace('\|', '|')
+        w.replace('\\\\', '\\')
+        raw_color_word = word[index + len(delimiter):]
+        try:
+            color_word = raw_color_word.upper()
+            if color_word[:3] == 'BG_':
+                bg = True
+                color_word = color_word[3:]
+            c = color_dict[color_word]
+        except KeyError:
+            print_error('Wrong color name: \'' + raw_color_word + '\'')
+            c = RED
+            bg = False
+    return w, c, bg
+
+
+def parse_words_with_color(words):
+    words_with_color = []
+    for word in words:
+        words_with_color.append(extract_color_from_word(word))
+    return words_with_color
+
+
+def empty(vector):
+    return vector is None or len(vector) <= 0
+
+
+def parse_keywords(keyword_str_list):
+    if empty(keyword_str_list):
+        return None
+    else:
+        res = []
+        for words in keyword_str_list:
+            res += parse_words_with_color(words.split('|'))
+        return res
+
+
+grep_words_with_color = parse_keywords(args.grep_words)
+highlight_words_with_color = parse_keywords(args.highlight_words)
+excluded_words = parse_keywords(args.grepv_words)
+igrep_words_with_color = parse_keywords(args.igrep_words)
+ihighlight_words_with_color = parse_keywords(args.ihighlight_words)
+iexcluded_words = parse_keywords(args.igrepv_words)
 
 
 def does_match_grep(message, grep_words_with_color, ignore_case):
@@ -182,53 +176,40 @@ def highlight(line, words_to_color, ignore_case=False, prev_line=None, next_line
 ANSI_ESC_PATTERN = r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})*(;[0-9]{3})?)?[m|K]'
 
 
-# All ANSI escape codes are not counted in this `substr` function but are kept in the substring
-def substr(unstripped_str, start, end):
-    res = ''
-    unstripped_i = 0
-    idx = 0
-    cur_esc = ''
-    while unstripped_i < len(unstripped_str):
-        match_res = re.match(ANSI_ESC_PATTERN, unstripped_str[unstripped_i:])
-        if match_res:
-            cur_esc = unstripped_str[match_res.start() + unstripped_i:match_res.end() + unstripped_i]
-            if start <= idx <= end:
-                res += cur_esc
-            unstripped_i += match_res.end()
-        else:
-            if start <= idx < end:
-                if len(cur_esc) > 0 and idx == start and len(res) == 0:
-                    res += cur_esc
-                res += unstripped_str[unstripped_i]
-            unstripped_i += 1
-            idx += 1
-
-    if len(res) > 0 and res[-len(RESET):] != RESET and res[-len(EOL):] != EOL:
-        res += RESET
-    return res
-
-
-def split_to_lines(message, total_width, initial_indent_width, subsequent_indent_width):
+def split_to_lines(message, total_width, initial_indent_width=0, subsequent_indent_width=0):
     if total_width == -1:
         return message
-    message = message.replace('\t', '    ')
+    message = message.replace('\t', ' ' * 4)
     lines = []
-    current = 0
-    while current < len(message):
-        if current == 0:
-            wrap_area = total_width - initial_indent_width
+
+    current_indent = initial_indent_width
+    current_line = ''
+    current_esc = RESET
+    current_line_stripped_len = 0
+    idx = 0
+    while idx < len(message):
+        matches = re.match(ANSI_ESC_PATTERN, message[idx:])
+        if matches:
+            current_esc = message[idx + matches.start():idx + matches.end()]
+            current_line += current_esc
+            idx += matches.end()
         else:
-            wrap_area = total_width - subsequent_indent_width
-        next_pos = min(current + wrap_area, len(message))
-        lines.append(substr(message, current, next_pos))
-        current = next_pos
-    while len(lines) > 0 and empty(lines[-1]):
-        del lines[-1]
+            current_line += message[idx]
+            current_line_stripped_len += 1
+            if current_line_stripped_len >= total_width - current_indent:
+                if current_line[-len(RESET):] != RESET:
+                    current_line += RESET
+                lines.append(current_line)
+                current_indent = subsequent_indent_width
+                if current_esc == RESET:
+                    current_line = ''
+                else:
+                    current_line = current_esc
+                current_line_stripped_len = 0
+            idx += 1
+    if len(current_line) > 0:
+        lines.append(current_line)
     return lines
-
-
-def print_error(error_msg):
-    print('\n' + colorize(error_msg, fg=WHITE, bg=RED, ul=True) + '\n')
 
 
 def run(input_src, file_path):
