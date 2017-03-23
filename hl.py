@@ -222,7 +222,7 @@ def split_to_lines(message, total_width, initial_indent_width, subsequent_indent
         next_pos = min(current + wrap_area, len(message))
         lines.append(substr(message, current, next_pos))
         current = next_pos
-    while len(lines) > 0 and empty(lines[- 1]):
+    while len(lines) > 0 and empty(lines[-1]):
         del lines[-1]
     return lines
 
