@@ -119,7 +119,7 @@ def does_match_grep(message, grep_words_with_color, ignore_case):
 
 def does_match_grepv(message, grepv_words, ignore_case):
     if not empty(grepv_words):
-        for word in grepv_words:
+        for word, color, bg in grepv_words:
             if len(word) > 0 and ((not ignore_case and word in message) or (ignore_case and word.upper() in message.upper())):
                 return True
     return False
