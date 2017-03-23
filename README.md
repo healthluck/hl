@@ -28,7 +28,7 @@ Example to use it in bash pipe mode:
 
 You can also wrap long lines with a specific width and indent, which makes your logs even more readable when the log has headers
 ```bash
-    hl --ihl="service\|android\\cyan\|android\\yellow\|bundle\\bg_blue\|world\\magenta\|intent\\bg_cyan" --wrap-indent=43 file.txt
+    hl --wrap-indent=43 --ihl="service\|android\\cyan\|android\\yellow\|bundle\\bg_blue\|world\\magenta\|intent\\bg_cyan" file.txt
 ```
 ![Example screen](screen2.png)
 
