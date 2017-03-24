@@ -38,7 +38,8 @@ Here are usage details:
 usage: hl [-h] [--grep GREP_WORDS] [--hl HIGHLIGHT_WORDS]
           [--grepv GREPV_WORDS] [--igrep IGREP_WORDS] [--ihl IHIGHLIGHT_WORDS]
           [--igrepv IGREPV_WORDS] [--wrap-indent WRAP_INDENT_WIDTH]
-          [--wrap TERMINAL_WIDTH] [-v]
+          [--wrap TERMINAL_WIDTH] [--hide-header HIDE_HEADER_REGEX]
+          [--hide-header-ios] [--hide-header-android] [-v]
           [files [files ...]]
 
 Highlight keywords in a file or stdin with different specified colors
@@ -59,11 +60,12 @@ optional arguments:
                         Supported colors (case ignored): {BLACK, RED, GREEN,
                         YELLOW, BLUE, MAGENTA, CYAN, WHITE, BG_BLACK, BG_RED,
                         BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN,
-                        BG_WHITE}. The color with prefix 'BG_' is background
-                        color. You can have multiple '--grep' options in the
-                        command line, and if so, the command will grep all of
-                        the key words in all '--grep' options. Escape '|' with
-                        '\|', and '\' with '\\'.
+                        BG_WHITE, NONE}. The color with prefix 'BG_' is
+                        background color. And color 'NONE' means NOT
+                        highlighting with color. You can have multiple '--
+                        grep' options in the command line, and if so, the
+                        command will grep all of the key words in all '--grep'
+                        options. Escape '|' with '\|', and '\' with '\\'.
   --hl HIGHLIGHT_WORDS  Words to highlight in log messages. Unlike --grep
                         option, this option will only highlight the specified
                         words with specified color but does not filter any
@@ -102,6 +104,28 @@ optional arguments:
                         here. When this option is provided, every line will be
                         wrapped based on the 'terminal_width' specified, where
                         each line will be limited to the area with this width
+  --hide-header HIDE_HEADER_REGEX
+                        The parameter is regular expression. When this option
+                        provided, the script will match the head of each log
+                        line with the regular expression, and remove the
+                        matched header in the output. This is useful when the
+                        output has big long headers in each line which you
+                        don't care and want to hide them from the output. The
+                        regular expression syntax is in python style as
+                        described in
+                        'https://docs.python.org/2/library/re.html'. You can
+                        specify multiple '--hide-header' options and if the
+                        header matches any of them, it will be removed from
+                        output
+  --hide-header-ios     Built-in option to hide iOS console header. The same
+                        as "--hide-header='[A-Za-z]{3} [0-9]+ [0-9:]{8} [^\s]+
+                        [^\s]+\[[0-9]+\] <[^\s]+>:[\s]+'"
+  --hide-header-android
+                        Built-in option to hide Android 'adb logcat' output
+                        header. The same as "--hide-header='^[0-9-]+
+                        [0-9:.]+\s*[0-9]+\s*[0-9]+ [A-Z] .+?:[\s]+' --hide-
+                        header='^[0-9-]+ [0-9:.]+ [A-Z]/.+?\( *\d+\):[\s+]'
+                        --hide-header='[A-Z]/.+?\( *\d+\):[\s]+'"
   -v, --version         Print the version number and exit
 </pre>
 
