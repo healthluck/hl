@@ -17,18 +17,18 @@ Regular expressions are not supported for now.
 
 Here is an example:
 ```bash
-    hl --grep="nanohub" --hl="enable|bridge\magenta|event\bg_blue|sensor\white|data\bg_black|provider\bg_yellow|wifi\cyan" file.txt
+    hl --grep='nanohub' --hl='enable|bridge\magenta|event\bg_blue|sensor\white|data\bg_black|provider\bg_yellow|wifi\cyan' file.txt
 ```
 ![Example screen](screen.png)
 
 Example to use it in bash pipe mode:
 ```bash
-    cat file.txt | hl --grep="nanohub" --hl="enable|bridge\magenta|event\bg_blue|sensor\white|data\bg_black|provider\bg_yellow|wifi\cyan"
+    cat file.txt | hl --grep='nanohub' --hl='enable|bridge\magenta|event\bg_blue|sensor\white|data\bg_black|provider\bg_yellow|wifi\cyan'
 ```
 
 You can also wrap long lines with a specific width and indent, which makes your logs even more readable when the log has headers
 ```bash
-    hl --wrap-indent=43 --ihl="service|android\cyan|android\yellow|bundle\bg_blue|world\magenta|intent\bg_cyan" file.txt
+    hl --wrap-indent=43 --ihl='service|android\cyan|android\yellow|bundle\bg_blue|world\magenta|intent\bg_cyan' file.txt
 ```
 ![Example screen](screen2.png)
 
@@ -52,7 +52,7 @@ optional arguments:
                         delimited with '|', where each word can be tailed with
                         a color initialed with '\'. If no color is specified,
                         'RED' will be the default color. For example, option
-                        --grep="word1|word2\CYAN" means to filter out all
+                        --grep='word1|word2\CYAN' means to filter out all
                         lines containing either word1 or word2, and word1 will
                         appear in default color 'RED' while word2 will be in
                         the specified color 'CYAN'. Supported colors (case
@@ -93,12 +93,12 @@ optional arguments:
                         running in pipe mode, you have to use '--wrap' option
                         explicitly to specify the terminal width by just
                         adding '--wrap=`tput cols`'. For example, 'cat
-                        file.txt | hl.py --grep="test" --wrap=`tput cols`'
+                        file.txt | hl.py --grep='test' --wrap=`tput cols`'
   --wrap TERMINAL_WIDTH
                         When running in pipe mode (like 'cat file.txt | hl.py
-                        --grep="test" --wrap=`tput cols`'), if you want to
+                        --grep='test' --wrap=`tput cols`'), if you want to
                         wrap each line width specified width, you need to give
-                        terminal width as the value, just put "`tput cols`"
+                        terminal width as the value, just put `tput cols`
                         here. When this option is provided, every line will be
                         wrapped based on the 'terminal_width' specified, where
                         each line will be limited to the area with this width
