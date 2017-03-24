@@ -35,11 +35,11 @@ You can also wrap long lines with a specific width and indent, which makes your 
 Here are usage details:
 
 <pre>
-usage: hl.py [-h] [--grep GREP_WORDS] [--hl HIGHLIGHT_WORDS]
-             [--grepv GREPV_WORDS] [--igrep IGREP_WORDS]
-             [--ihl IHIGHLIGHT_WORDS] [--igrepv IGREPV_WORDS]
-             [--wrap-indent WRAP_INDENT_WIDTH] [--wrap TERMINAL_WIDTH] [-v]
-             [files [files ...]]
+usage: hl [-h] [--grep GREP_WORDS] [--hl HIGHLIGHT_WORDS]
+          [--grepv GREPV_WORDS] [--igrep IGREP_WORDS] [--ihl IHIGHLIGHT_WORDS]
+          [--igrepv IGREPV_WORDS] [--wrap-indent WRAP_INDENT_WIDTH]
+          [--wrap TERMINAL_WIDTH] [-v]
+          [files [files ...]]
 
 Highlight keywords in a file or stdin with different specified colors
 
@@ -53,17 +53,17 @@ optional arguments:
                         a color initialed with '\'. If no color is specified,
                         'RED' will be the default color. For example, option
                         --grep='word1|word2\CYAN' means to filter out all
-                        lines containing either word1 or word2, and word1 will
-                        appear in default color 'RED' while word2 will be in
-                        the specified color 'CYAN'. Supported colors (case
-                        ignored): {BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA,
-                        CYAN, WHITE, BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW,
-                        BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE}. The color
-                        with prefix 'BG_' is background color. You can have
-                        multiple '--grep' options in the command line, and if
-                        so, the command will grep all of the key words in all
-                        '--grep' options. Escape '|' with '\|', and '\' with
-                        '\\'.
+                        lines containing either 'word1' or 'word2', and
+                        'word1' will appear in default color 'RED' while
+                        'word2' will be in the specified color 'CYAN'.
+                        Supported colors (case ignored): {BLACK, RED, GREEN,
+                        YELLOW, BLUE, MAGENTA, CYAN, WHITE, BG_BLACK, BG_RED,
+                        BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN,
+                        BG_WHITE}. The color with prefix 'BG_' is background
+                        color. You can have multiple '--grep' options in the
+                        command line, and if so, the command will grep all of
+                        the key words in all '--grep' options. Escape '|' with
+                        '\|', and '\' with '\\'.
   --hl HIGHLIGHT_WORDS  Words to highlight in log messages. Unlike --grep
                         option, this option will only highlight the specified
                         words with specified color but does not filter any
