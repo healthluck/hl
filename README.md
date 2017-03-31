@@ -35,11 +35,12 @@ You can also wrap long lines with a specific width and indent, which makes your 
 Here are usage details:
 
 <pre>
-usage: hl [-h] [--grep GREP_WORDS] [--hl HIGHLIGHT_WORDS]
-          [--grepv GREPV_WORDS] [--igrep IGREP_WORDS] [--ihl IHIGHLIGHT_WORDS]
-          [--igrepv IGREPV_WORDS] [--wrap-indent WRAP_INDENT_WIDTH]
-          [--wrap TERMINAL_WIDTH] [--hide-header HIDE_HEADER_REGEX]
-          [--hide-header-ios] [--hide-header-android] [-v]
+usage: hl [-h] [--grep WORD_LIST_TO_GREP] [--hl WORD_LIST_TO_HIGHLIGHT]
+          [--grepv WORD_LIST_TO_EXCLUDE] [--igrep WORD_LIST_TO_GREP]
+          [--ihl WORD_LIST_TO_HIGHLIGHT] [--igrepv WORD_LIST_TO_EXCLUDE]
+          [--wrap-indent WRAP_INDENT_WIDTH] [--wrap TERMINAL_WIDTH]
+          [--hide-header HIDE_HEADER_REGEX] [--hide-header-ios]
+          [--hide-header-android] [-v]
           [files [files ...]]
 
 Highlight keywords in a file or stdin with different specified colors
@@ -49,7 +50,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --grep GREP_WORDS     Filter lines with words in log messages. The words are
+  --grep WORD_LIST_TO_GREP
+                        Filter lines with words in log messages. The words are
                         delimited with '|', where each word can be tailed with
                         a color initialed with '\'. If no color is specified,
                         'RED' will be the default color. For example, option
@@ -66,7 +68,8 @@ optional arguments:
                         grep' options in the command line, and if so, the
                         command will grep all of the key words in all '--grep'
                         options. Escape '|' with '\|', and '\' with '\\'.
-  --hl HIGHLIGHT_WORDS  Words to highlight in log messages. Unlike --grep
+  --hl WORD_LIST_TO_HIGHLIGHT
+                        Words to highlight in log messages. Unlike --grep
                         option, this option will only highlight the specified
                         words with specified color but does not filter any
                         lines. Except this, the format and supported colors
@@ -74,7 +77,8 @@ optional arguments:
                         options in the command line, and if so, the command
                         will highlight all of the key words in all '--hl'
                         options
-  --grepv GREPV_WORDS   Exclude lines with words from log messages. The format
+  --grepv WORD_LIST_TO_EXCLUDE
+                        Exclude lines with words from log messages. The format
                         and supported colors are the same as '--grep'. Note
                         that if both '--grepv' and '--grep' are provided and
                         they contain the same word, the line will always show,
@@ -83,10 +87,11 @@ optional arguments:
                         grepv' options in the command line, and if so, the
                         command will exclude the lines containing any keywords
                         in all '--grepv' options
-  --igrep IGREP_WORDS   The same as '--grep', just ignore case
-  --ihl IHIGHLIGHT_WORDS
+  --igrep WORD_LIST_TO_GREP
+                        The same as '--grep', just ignore case
+  --ihl WORD_LIST_TO_HIGHLIGHT
                         The same as '--hl', just ignore case
-  --igrepv IGREPV_WORDS
+  --igrepv WORD_LIST_TO_EXCLUDE
                         The same as '--grepv', just ignore case
   --wrap-indent WRAP_INDENT_WIDTH
                         If this option is provided, each wrapped line will be
