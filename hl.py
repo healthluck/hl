@@ -15,7 +15,7 @@ ANDROID_HEADER_REGEX = ['^[0-9-]+ [0-9:.]+\s*[0-9]+\s*[0-9]+ [A-Z] .+?:[\s]+',
 
 parser = argparse.ArgumentParser(description='Highlight keywords in a file or stdin with different specified colors')
 parser.add_argument('files', nargs='*', help='File path', default=None)
-parser.add_argument('--grep', dest='grep_words', action='append',
+parser.add_argument('--grep', dest='grep_words', metavar='WORD_LIST_TO_GREP', action='append',
                     help='Filter lines with words in log messages. The words are delimited with \'|\', '
                          'where each word can be tailed with a color initialed with \'\\\'. If no color is specified, '
                          '\'RED\' will be the default color. For example, option --grep=\'word1|word2\\CYAN\' means to '
@@ -27,24 +27,24 @@ parser.add_argument('--grep', dest='grep_words', action='append',
                          'means NOT highlighting with color. You can have multiple \'--grep\' options in the '
                          'command line, and if so, the command will grep all of the key words in all \'--grep\' '
                          'options. Escape \'|\' with \'\\|\', and \'\\\' with \'\\\\\'.')
-parser.add_argument('--hl', dest='highlight_words', action='append',
+parser.add_argument('--hl', dest='highlight_words', metavar='WORD_LIST_TO_HIGHLIGHT', action='append',
                     help='Words to highlight in log messages. Unlike --grep option, this option will only highlight '
                          'the specified words with specified color but does not filter any lines. Except this, '
                          'the format and supported colors are the same as \'--grep\'. You can have multiple \'--hl\' '
                          'options in the command line, and if so, the command will highlight all of the key words '
                          'in all \'--hl\' options')
-parser.add_argument('--grepv', dest='grepv_words', action='append',
+parser.add_argument('--grepv', dest='grepv_words', metavar='WORD_LIST_TO_EXCLUDE', action='append',
                     help='Exclude lines with words from log messages. The format and supported colors are the same '
                          'as \'--grep\'. Note that if both \'--grepv\' and \'--grep\' are provided and they contain '
                          'the same word, the line will always show, which means \'--grep\' overwrites \'--grepv\' '
                          'for the same word they both contain. You can have multiple \'--grepv\' options in the '
                          'command line, and if so, the command will exclude the lines containing any keywords in '
                          'all \'--grepv\' options')
-parser.add_argument('--igrep', dest='igrep_words', action='append',
+parser.add_argument('--igrep', dest='igrep_words', metavar='WORD_LIST_TO_GREP', action='append',
                     help='The same as \'--grep\', just ignore case')
-parser.add_argument('--ihl', dest='ihighlight_words', action='append',
+parser.add_argument('--ihl', dest='ihighlight_words', metavar='WORD_LIST_TO_HIGHLIGHT', action='append',
                     help='The same as \'--hl\', just ignore case')
-parser.add_argument('--igrepv', dest='igrepv_words', action='append',
+parser.add_argument('--igrepv', dest='igrepv_words', metavar='WORD_LIST_TO_EXCLUDE', action='append',
                     help='The same as \'--grepv\', just ignore case')
 parser.add_argument('--wrap-indent', dest='wrap_indent_width', type=int, default=0,
                     help='If this option is provided, each wrapped line will be added an extra indent. This option '
