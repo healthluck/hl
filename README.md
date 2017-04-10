@@ -1,7 +1,7 @@
-hl (A Simple Text Highlighting Tool)
+hl (A Text Highlighting Tool)
 ====================================
 
-This is a simple text highlight tool similar to `grep --color`,
+This is a text highlight tool similar to `grep --color`,
 but unlike grep, this tool can highlight with specific different
 colors for different keywords, which is very useful for debugging or analyzing logs
 
