@@ -13,7 +13,7 @@ with `\color_name`. The supported color names are `BLACK, RED, GREEN, YELLOW, BL
 BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE`.
 Color names are case ignored. Color with prefix "BG_" means background color.
 
-Regular expressions are not supported for now.
+Regular expressions are supported as well.
 
 Here is an example:
 ```bash
@@ -38,9 +38,10 @@ Here are usage details:
 usage: hl [-h] [--grep WORD_LIST_TO_GREP] [--hl WORD_LIST_TO_HIGHLIGHT]
           [--grepv WORD_LIST_TO_EXCLUDE] [--igrep WORD_LIST_TO_GREP]
           [--ihl WORD_LIST_TO_HIGHLIGHT] [--igrepv WORD_LIST_TO_EXCLUDE]
-          [--wrap-indent WRAP_INDENT_WIDTH] [--wrap TERMINAL_WIDTH]
-          [--hide-header HIDE_HEADER_REGEX] [--hide-header-ios]
-          [--hide-header-android] [-v]
+          [--rgrep REGEX_LIST_TO_GREP] [--rhl REGEX_LIST_TO_HIGHLIGHT]
+          [--rgrepv REGEX_LIST_TO_EXCLUDE] [--wrap-indent WRAP_INDENT_WIDTH]
+          [--wrap TERMINAL_WIDTH] [--hide-header HIDE_HEADER_REGEX]
+          [--hide-header-ios] [--hide-header-android] [-v]
           [files [files ...]]
 
 Highlight keywords in a file or stdin with different specified colors
@@ -93,6 +94,21 @@ optional arguments:
                         The same as '--hl', just ignore case
   --igrepv WORD_LIST_TO_EXCLUDE
                         The same as '--grepv', just ignore case
+  --rgrep REGEX_LIST_TO_GREP
+                        The same as '--grep', just using regular expressions
+                        in python style as described in
+                        'https://docs.python.org/2/library/re.html'. Make sure
+                        to escape '|' with '\|', and '\' with '\\'
+  --rhl REGEX_LIST_TO_HIGHLIGHT
+                        The same as '--hl', just using regular expressions in
+                        python style as described in
+                        'https://docs.python.org/2/library/re.html'. Make sure
+                        to escape '|' with '\|', and '\' with '\\'
+  --rgrepv REGEX_LIST_TO_EXCLUDE
+                        The same as '--grepv', just using regular expressions
+                        in python style as described in
+                        'https://docs.python.org/2/library/re.html'. Make sure
+                        to escape '|' with '\|', and '\' with '\\'
   --wrap-indent WRAP_INDENT_WIDTH
                         If this option is provided, each wrapped line will be
                         added an extra indent. This option implicitly enables
