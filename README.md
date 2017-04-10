@@ -118,19 +118,23 @@ optional arguments:
                         don't care and want to hide them from the output. The
                         regular expression syntax is in python style as
                         described in
-                        'https://docs.python.org/2/library/re.html'. You can
-                        specify multiple '--hide-header' options and if the
-                        header matches any of them, it will be removed from
-                        output
+                        'https://docs.python.org/2/library/re.html'. Note that
+                        you can also keep some part of the header in the
+                        outputby adding '(' and ')' around the sub regex in
+                        your regex string. You can specify multiple '--hide-
+                        header' options, and if multiple regex are matched,
+                        the longest matched header will be removed from
+                        output.
   --hide-header-ios     Built-in option to hide iOS console header. The same
-                        as "--hide-header='[A-Za-z]{3} [0-9]+ [0-9:]{8} [^\s]+
-                        [^\s]+\[[0-9]+\] <[^\s]+>:[\s]+'"
+                        as "--hide-header='[A-Za-z]{3}[\s]+[0-9]+[\s]+[0-9:]{8
+                        }[\s]+[^\s]+[\s]+[^\s]+\[[0-9]+\][\s]+<[^\s]+>:[\s]+'"
   --hide-header-android
                         Built-in option to hide Android 'adb logcat' output
-                        header. The same as "--hide-header='^[0-9-]+
-                        [0-9:.]+\s*[0-9]+\s*[0-9]+ [A-Z] .+?:[\s]+' --hide-
-                        header='^[0-9-]+ [0-9:.]+ [A-Z]/.+?\( *\d+\):[\s+]'
-                        --hide-header='[A-Z]/.+?\( *\d+\):[\s]+'"
+                        header. The same as "--hide-header='^[0-9-]+[\s]+[0-9:
+                        .]+\s*[0-9]+\s*[0-9]+[\s]+[A-Z][\s]+.+?:[\s]+' --hide-
+                        header='^[0-9-]+[\s]+[0-9:.]+[\s]+[A-Z]/.+?\(
+                        *\d+\):[\s+]' --hide-header='[A-Z]/.+?\(
+                        *\d+\):[\s]+'"
   -v, --version         Print the version number and exit
 </pre>
 

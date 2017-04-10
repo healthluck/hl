@@ -5,7 +5,7 @@ import glob
 import re
 import sys
 
-__version__ = '1.0.0'
+__version__ = '1.0.8'
 
 IOS_HEADER_REGEX = ['[A-Za-z]{3}[\s]+[0-9]+[\s]+[0-9:]{8}[\s]+[^\s]+[\s]+[^\s]+\[[0-9]+\][\s]+<[^\s]+>:[\s]+']
 ANDROID_HEADER_REGEX = ['^[0-9-]+[\s]+[0-9:.]+\s*[0-9]+\s*[0-9]+[\s]+[A-Z][\s]+.+?:[\s]+',
@@ -64,9 +64,12 @@ parser.add_argument('--hide-header', dest='hide_header_regex', action='append',
                          'head of each log line with the regular expression, and remove the matched header in the '
                          'output. This is useful when the output has big long headers in each line which you don\'t '
                          'care and want to hide them from the output. The regular expression syntax is in python '
-                         'style as described in \'https://docs.python.org/2/library/re.html\'. You can specify '
-                         'multiple \'--hide-header\' options and if the header matches any of them, it will be '
-                         'removed from output')
+                         'style as described in \'https://docs.python.org/2/library/re.html\'.'
+                         ' Note that you can also keep some part of the header in the output'
+                         'by adding \'(\' and \')\' around the sub regex in your regex string.'
+                         ' You can specify '
+                         'multiple \'--hide-header\' options, and if multiple regex are matched, the longest '
+                         'matched header will be removed from output.')
 parser.add_argument('--hide-header-ios', dest='hide_ios_header_regex', action='store_true', default=False,
                     help='Built-in option to hide iOS console header. The same as '
                          '\"--hide-header=\'' + IOS_HEADER_REGEX[0] + '\'\"')
@@ -281,11 +284,16 @@ def split_to_lines(message, total_width, initial_indent_width=0, subsequent_inde
 
 
 def hide_header(line, regex_list):
+    best_matches = None
     for regex in regex_list:
         matches = re.match(regex, line)
         if matches:
-            return line[matches.end():], True
-    return line, False
+            if best_matches is None or best_matches.end() < matches.end():
+                best_matches = matches
+    if best_matches is None:
+        return line, [], False
+    else:
+        return line[best_matches.end():], best_matches.groups(), True
 
 
 def run(input_src, file_path):
@@ -316,14 +324,18 @@ def run(input_src, file_path):
 
         header_hidden = False
 
+        extracted_header = []
+        if not header_hidden and not empty(args.hide_header_regex):
+            line, groups, header_hidden = hide_header(line, args.hide_header_regex)
+            extracted_header = groups
+
         if not header_hidden and args.hide_ios_header_regex:
-            line, header_hidden = hide_header(line, IOS_HEADER_REGEX)
+            line, groups, header_hidden = hide_header(line, IOS_HEADER_REGEX)
+            extracted_header = groups
 
         if not header_hidden and args.hide_android_header_regex:
-            line, header_hidden = hide_header(line, ANDROID_HEADER_REGEX)
-
-        if not header_hidden and not empty(args.hide_header_regex):
-            line, header_hidden = hide_header(line, args.hide_header_regex)
+            line, groups, header_hidden = hide_header(line, ANDROID_HEADER_REGEX)
+            extracted_header = groups
 
         words_to_color = []
         if grep_words_with_color is not None:
@@ -339,6 +351,8 @@ def run(input_src, file_path):
 
         line = highlight(line, words_to_color, ignore_case=False)
         line = highlight(line, iwords_to_color, ignore_case=True)
+
+        line = ' '.join(extracted_header) + ' ' + line
 
         if args.terminal_width != -1 or args.wrap_indent_width != 0:
 
@@ -362,6 +376,7 @@ def run(input_src, file_path):
             linebuf = line
 
         sys.stdout.write(linebuf.encode('utf-8'))
+        sys.stdout.flush()
     return 0
 
 
