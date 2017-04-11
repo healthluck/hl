@@ -7,7 +7,7 @@ import sys
 
 __version__ = '1.0.8'
 
-IOS_HEADER_REGEX = ['[A-Za-z]{3}[\s]+[0-9]+[\s]+[0-9:]{8}[\s]+[^\s]+[\s]+[^\s]+\[[0-9]+\][\s]+<[^\s]+>:[\s]+']
+IOS_HEADER_REGEX = ['[\s]*[A-Za-z]{3}[\s]+[0-9]+[\s]+[0-9:]{8}[\s]+[^\s]+[\s]+[^\s]+\[[0-9]+\][\s]+<[^\s]+>:[\s]+']
 ANDROID_HEADER_REGEX = ['^[0-9-]+[\s]+[0-9:.]+\s*[0-9]+\s*[0-9]+[\s]+[A-Z][\s]+.+?:[\s]+',
                         '^[0-9-]+[\s]+[0-9:.]+[\s]+[A-Z]/.+?\( *\d+\):[\s+]',
                         '[A-Z]/.+?\( *\d+\):[\s]+']
@@ -214,10 +214,26 @@ def does_match_grep(message, grep_words_with_color, ignore_case):
     return False
 
 
+def does_match_regex_grep(message, regex_grep_words_with_color):
+    if not empty(regex_grep_words_with_color):
+        for pattern, c, bg in regex_grep_words_with_color:
+            if len(pattern) > 0 and re.search(pattern, message) is not None:
+                return True
+    return False
+
+
 def does_match_grepv(message, grepv_words, ignore_case):
     if not empty(grepv_words):
         for word, color, bg in grepv_words:
             if len(word) > 0 and ((not ignore_case and word in message) or (ignore_case and word.upper() in message.upper())):
+                return True
+    return False
+
+
+def does_match_regex_grepv(message, rgrepv_words):
+    if not empty(rgrepv_words):
+        for pattern, c, bg in rgrepv_words:
+            if len(pattern) > 0 and re.search(pattern, message) is not None:
                 return True
     return False
 
@@ -328,16 +344,18 @@ def run(input_src, file_path):
 
         matches_grep = does_match_grep(line, grep_words_with_color, False)
         matches_igrep = does_match_grep(line, igrep_words_with_color, True)
+        machtes_rgrep = does_match_regex_grep(line, rgrep_words_with_color)
 
         matches_grepv = does_match_grepv(line, excluded_words, False)
         matches_igrepv = does_match_grepv(line, iexcluded_words, True)
+        machtes_rgrepv = does_match_regex_grepv(line, rexcluded_words)
 
-        if matches_grep or matches_igrep:
+        if matches_grep or matches_igrep or machtes_rgrep:
             pass
-        elif matches_grepv or matches_igrepv:
+        elif matches_grepv or matches_igrepv or machtes_rgrepv:
             continue
         else:
-            if empty(grep_words_with_color) and empty(igrep_words_with_color):
+            if empty(grep_words_with_color) and empty(igrep_words_with_color) and empty(rgrep_words_with_color):
                 pass
             else:
                 continue
