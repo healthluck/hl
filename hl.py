@@ -265,7 +265,7 @@ def highlight(line, words_to_color, ignore_case=False, is_regex=False):
                     if is_regex:
                         re_res = re.search(word, line[index:])
                         if re_res:
-                            index = re_res.start()
+                            index += re_res.start()
                             word_len = re_res.end() - re_res.start()
                         else:
                             break
