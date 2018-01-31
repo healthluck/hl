@@ -383,7 +383,8 @@ def run(input_src, file_path):
         line = highlight(line, iwords_to_color, ignore_case=True)
         line = highlight(line, rwords_to_color, is_regex=True)
 
-        line = ' '.join(extracted_header) + ' ' + line
+        if not empty(extracted_header):
+            line = ' '.join(extracted_header) + ' ' + line
 
         if args.terminal_width != -1 or args.wrap_indent_width != 0:
 
